@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Code Playground</title>
+<style>
+:root{--bg:#f4f5f7;--fg:#1b2027;--card:#fff;--bd:#cfd6de;--mut:#68717c;--py:#3776ab;--sq:#0f8b8d;--ac:#e8a317;--code:#eef1f5;--err:#d62f3a}
+@media(prefers-color-scheme:dark){:root{--bg:#0e1319;--fg:#e6ebf0;--card:#171d25;--bd:#2f3844;--mut:#8f9aa7;--code:#0e1319;--err:#ff6b73}}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:var(--bg);color:var(--fg);font:15px system-ui,-apple-system,Segoe UI,sans-serif;display:flex;flex-direction:column;overflow-x:hidden}
+.btn{font:inherit;font-size:13px;border:1px solid var(--bd);background:var(--card);color:var(--fg);padding:6px 10px;border-radius:8px;cursor:pointer}
+.btn:hover{border-color:var(--ac)}.btn[aria-pressed=true]{background:var(--py);color:#fff;border-color:var(--py)}
+:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+.view{display:none;flex-direction:column;flex:1;min-height:0}.view.on{display:flex}
+#home{align-items:center;justify-content:center;gap:24px;text-align:center;padding:16px}
+#home h1{margin:0;font-size:32px}.d{color:var(--mut)}.e{color:var(--err)}
+.cards{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.card{width:310px;padding:30px 20px;border-radius:14px;border:2px solid var(--bd);background:var(--card);cursor:pointer;font:inherit;color:inherit;box-shadow:0 4px 14px #0002}
+.card b{display:block;font-size:19px;margin-bottom:8px}.card span{color:var(--mut);font-size:13px}
+#c1:hover{border-color:var(--py)}#c2:hover{border-color:var(--sq)}
+.bar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:6px 8px;border-bottom:1px solid var(--bd);background:var(--card)}
+.bar h2{margin:0 6px;font-size:16px}select.btn{max-width:170px}
+.split{display:flex;flex:1;min-height:0}.split[hidden]{display:none}
+.pane{flex:1;display:flex;flex-direction:column;min-width:0;min-height:0;border-right:1px solid var(--bd)}
+.ed{display:flex;flex:1;min-height:110px;background:var(--code)}
+.ed pre,.ed textarea,.mono{font:var(--fs,13px)/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.ed pre{margin:0;padding:8px 6px;text-align:right;color:var(--mut);overflow:hidden;min-width:40px;border-right:1px solid var(--bd)}
+.ed textarea{flex:1;border:0;padding:8px;background:transparent;color:var(--fg);resize:none;white-space:pre;overflow:auto;tab-size:4}
+.out{flex:1;overflow:auto;margin:0;padding:8px;background:var(--code);white-space:pre-wrap;min-height:90px;word-break:break-word}
+.out img{max-width:100%;display:block;margin:6px 0;background:#fff}
+textarea.in{width:100%;border:0;border-top:1px solid var(--bd);background:var(--card);color:var(--fg);padding:6px 8px;font:13px ui-monospace,Menlo,Consolas,monospace}
+#side{width:230px;overflow:auto;padding:8px;background:var(--card);border-right:1px solid var(--bd);font-size:13px}
+#side details{margin:2px 0}#side summary{cursor:pointer}#side li{list-style:none;color:var(--mut);font:12px ui-monospace,Menlo,monospace}#side ul{margin:2px 0;padding-left:14px}
+#res{flex:1;overflow:auto;padding:8px;background:var(--bg);min-height:100px}
+table{border-collapse:collapse;font:13px ui-monospace,Menlo,Consolas,monospace;margin:4px 0 2px}
+th{position:sticky;top:0;background:var(--sq);color:#fff;text-align:left}th,td{border:1px solid var(--bd);padding:3px 8px;white-space:nowrap}td.d{font-style:italic}
+.tw{overflow:auto;max-height:55vh}.st{padding:3px 8px;font-size:12px;border-top:1px solid var(--bd);background:var(--card);color:var(--mut)}
+#sqlmsg{padding:30px;text-align:center}
+.ow{position:relative;flex:1;min-width:0;display:flex}
+.ed .hl{position:absolute;inset:0;margin:0;padding:8px;min-width:0;border:0;text-align:left;overflow:hidden;white-space:pre;pointer-events:none;color:var(--fg)}
+.ed .ow textarea{position:relative;color:transparent;caret-color:var(--fg)}
+.tc{color:var(--mut);font-style:italic}.ts{color:#1f8a4c}.tn{color:#c76a12}.tk{color:#7a3fd1;font-weight:600}.tf{color:#2b7bd6}
+@media(prefers-color-scheme:dark){.ts{color:#7ee0a0}.tn{color:#ffb86b}.tk{color:#c9a0ff}.tf{color:#79c0ff}}
+details.st summary{cursor:pointer}
+.gut{flex:0 0 6px;background:var(--bd);cursor:col-resize;touch-action:none}.gut.gv{cursor:row-resize}
+.gut:hover,.gut.drag,.gut:focus-visible{background:var(--ac)}
+#top{padding:6px 10px;border-bottom:1px solid var(--bd);background:var(--card);display:flex;justify-content:center}
+#about{display:flex;gap:10px;align-items:center;text-align:left;border-radius:12px;padding:5px 14px;line-height:1.3}
+#about small{color:var(--mut);font-size:12px}#about i{color:var(--mut);font-size:12px}
+#abt{border:1px solid var(--bd);border-radius:14px;background:var(--card);color:var(--fg);max-width:min(92vw,420px)}
+body{-webkit-user-select:none;user-select:none}
+textarea,input,.out,#res,#term,#vars,.ed pre.hl{-webkit-user-select:text;user-select:text}
+.dev{font-family:"Segoe Script","Brush Script MT","Snell Roundhand","Apple Chancery","Lucida Handwriting",cursive;font-style:italic;font-weight:700;letter-spacing:.6px;color:#e8157a}
+@supports((-webkit-background-clip:text) or (background-clip:text)){.dev{background:linear-gradient(90deg,#ff7a18,#e8157a 55%,#7a3fd1);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;padding-right:2px}}
+#about small .dev{font-size:17px}#abt .dev{font-size:24px}
+@media(max-width:600px){#about i{display:none}}
+@media(max-width:800px){.split>.gut{cursor:row-resize}}
+@media(max-width:800px){.split{flex-direction:column}#side{width:auto;max-height:28vh;border-right:0}.pane{border-right:0}}
+@media(prefers-reduced-motion:no-preference){.card{transition:border-color .15s,transform .15s}.card:hover{transform:translateY(-2px)}}
+</style></head><body>
+
+<header id="top"><button id="about" class="btn" aria-haspopup="dialog" aria-label="About Code Playground">
+ <svg width="38" height="38" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3776ab"/><stop offset="1" stop-color="#0f8b8d"/></linearGradient></defs><rect width="40" height="40" rx="10" fill="url(#lg)"/><path d="M16 12l-8 8 8 8M24 12l8 8-8 8" fill="none" stroke="#ffd43b" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+ <span><b>Code Playground</b> <small>by <span class="dev"></span></small><br><i>Where code meets curiosity: Python and SQL, right in your browser.</i></span></button></header>
+<dialog id="abt" aria-labelledby="abt-h"><h2 id="abt-h" style="margin-top:0">Code Playground</h2>
+ <p>Developed by <b class="dev"></b><br>Email: <a href="mailto:studteam7@gmail.com" style="color:var(--sq)">studteam7@gmail.com</a></p><p class="d">Where code meets curiosity: Python and SQL, right in your browser.</p>
+ <p class="d" style="font-size:13px">Python 3 (Pyodide) with pandas, matplotlib, OpenCV and nltk · MySQL-style workbench on SQLite. Everything runs locally on your device.</p>
+ <button class="btn" id="abt-x">Close</button></dialog>
+<section id="home" class="view on">
+ <div><h1>Code Playground</h1><p class="d">Python and SQL that run entirely in your browser. No server, no install.</p></div>
+ <div class="cards">
+  <button class="card" id="c1" aria-label="Open Python IDE with script and interactive mode"><b>🐍 Python IDE: Script &amp; Interactive Mode</b><span>Write, run and debug Python 3 with pandas, matplotlib, OpenCV, nltk and more</span></button>
+  <button class="card" id="c2" aria-label="Open MySQL workbench with sample database"><b>🐬 MySQL Workbench: Sample Database</b><span>Practice SQL on ready-made school and shop tables</span></button>
+ </div>
+</section>
+
+<section id="py" class="view">
+ <div class="bar"><button class="btn back">← Back to Home</button><h2>🐍 Python IDE</h2>
+  <button class="btn" id="mS" aria-pressed="true">Script Mode</button><button class="btn" id="mI" aria-pressed="false">Interactive Mode</button>
+  <span id="pyst" class="d" role="status"></span></div>
+ <div id="pS" class="split">
+  <div class="pane">
+   <div class="bar"><button class="btn" id="run" title="Ctrl/Cmd+Enter">▶ Run</button><button class="btn" id="stop">■ Stop</button><button class="btn" id="clr">🧹 Clear</button>
+    <button class="btn" id="open">📂 Open .py</button><button class="btn" id="save">💾 Save .py</button><button class="btn" id="fm" aria-label="Smaller font">A−</button><button class="btn" id="fp" aria-label="Larger font">A+</button><select class="btn" id="ex" aria-label="Examples"></select><input type="file" id="file" accept=".py,.txt" hidden></div>
+   <div class="ed"><pre id="gut" aria-hidden="true"></pre><textarea id="src" spellcheck="false" aria-label="Python code editor"></textarea></div>
+  </div>
+  <div class="gut" id="g1" role="separator" tabindex="0" aria-label="Resize editor and output (drag, or use arrow keys; double-click resets)"></div><div class="pane"><pre class="out mono" id="out" aria-live="polite"></pre>
+   <div class="gut gv" id="g2" role="separator" tabindex="0" aria-label="Resize output and input box (drag, or use arrow keys; double-click resets)"></div><textarea class="in" id="stdin" rows="3" aria-label="Program input" placeholder="Optional: pre-fill input() answers here, one per line. Otherwise you are asked when input() runs."></textarea></div>
+ </div>
+ <div id="pI" class="split" hidden>
+  <div class="pane"><div class="bar"><button class="btn" id="rst">Reset Session</button><button class="btn" id="tclr">Clear</button><button class="btn" id="tcopy">Copy transcript</button>
+   <label class="d"><input type="checkbox" id="ld"> Load my script into the session</label></div>
+   <div class="out mono" id="term" aria-live="polite"></div>
+   <details class="st"><summary>Variables</summary><pre id="vars" class="mono" style="margin:4px 0;max-height:60vh;min-height:40px;overflow:auto;resize:vertical">(none)</pre></details>
+   <div class="bar"><span id="pr" class="mono">&gt;&gt;&gt;</span><textarea id="rin" class="in mono" rows="2" style="flex:1;width:auto;border:1px solid var(--bd);resize:vertical" aria-label="Python prompt" placeholder="Enter runs, Shift+Enter adds a line, Up/Down for history, Ctrl+L clears"></textarea></div></div>
+ </div>
+ <div class="st">Libraries load on import: numpy, pandas, matplotlib (plt.show() draws below), cv2 (use show_image(img)), nltk, scipy, sklearn, sympy, PIL. mysql.connector is an in-browser emulation. Ctrl/Cmd+Enter runs.</div>
+</section>
+
+<section id="sql" class="view">
+ <div class="bar"><button class="btn back">← Back to Home</button><h2>🐬 MySQL Workbench</h2>
+  <button class="btn" id="qrun" title="Ctrl/Cmd+Enter runs selection or all">▶ Run</button><button class="btn" id="qclr">🧹 Clear</button>
+  <select class="btn" id="qs" aria-label="Sample queries"></select><select class="btn" id="qh" aria-label="History"><option>History</option></select>
+  <button class="btn" id="qopen">📂 Open .sql</button><button class="btn" id="qsave">💾 Save .sql</button><button class="btn" id="qcsv">⬇ CSV</button><input type="file" id="sfile" accept=".sql,.txt" hidden>
+  <button class="btn" id="qdl">⬇ .sqlite</button><button class="btn" id="qreset">Reset sample data</button></div>
+ <div id="sqlmsg">Loading SQL engine…</div>
+ <div class="split" id="sqlmain" hidden>
+  <div id="side"><label>Database <select class="btn" id="dbsel" aria-label="Database"></select></label><div id="tree"></div></div>
+  <div class="gut" id="g3" role="separator" tabindex="0" aria-label="Resize sidebar (drag, or use arrow keys; double-click resets)"></div><div class="pane" style="border:0"><div class="ed" style="flex:0 0 38%"><pre id="qgut" aria-hidden="true"></pre><textarea id="q" spellcheck="false" aria-label="SQL editor"></textarea></div><div class="gut gv" id="g4" role="separator" tabindex="0" aria-label="Resize editor and results (drag, or use arrow keys; double-click resets)"></div><div id="res" aria-live="polite"></div></div>
+ </div>
+ <div class="st">Runs locally on an SQLite engine with a MySQL-style compatibility layer (real MySQL needs a server). Nothing leaves your device.</div>
+</section>
+
+<script type="text/plain" id="boot">
+import sys,io,builtins,traceback,code,types,sqlite3,base64,re,json
+_imgs=[];_q=[];_replay=[False]
+class _NeedInput(BaseException):
+    def __init__(s,p):s.p=p
+def _input(p=''):
+    p=str(p)
+    if not _q:
+        if _replay[0]:raise _NeedInput(p)
+        raise EOFError('input() needs a value: it is asked for when you Run a script; in Interactive Mode a prompt box appears before the entry runs')
+    sys.stdout.write(p);v=_q.pop(0);print(v);return v
+builtins.input=_input
+def _take():
+    global _imgs
+    r=_imgs;_imgs=[];return r
+def _prep(src):
+    if 'matplotlib' in src and 'mpl' not in _prep.__dict__:
+        import matplotlib;matplotlib.use('agg')
+        import matplotlib.pyplot as plt
+        def show(*a,**k):
+            for n in plt.get_fignums():
+                b=io.BytesIO();plt.figure(n).savefig(b,format='png',dpi=90);_imgs.append(base64.b64encode(b.getvalue()).decode())
+            plt.close('all')
+        plt.show=show;_prep.mpl=1
+def show_image(a):
+    import cv2;ok,b=cv2.imencode('.png',a);_imgs.append(base64.b64encode(b.tobytes()).decode())
+builtins.show_image=show_image
+def _run(src,stdin,seed=0):
+    import random;random.seed(seed)
+    _q[:]=json.loads(stdin) if stdin else [];_replay[0]=True
+    _prep(src)
+    try:c=compile(src,'<script>','exec')
+    except SyntaxError as e:
+        print('Compile error:',file=sys.stderr);traceback.print_exception(type(e),e,None,file=sys.stderr);return
+    try:exec(c,{'__name__':'__main__'})
+    except _NeedInput as e:return 'INPUT:'+e.p
+    except SystemExit:pass
+    except BaseException as e:traceback.print_exception(type(e),e,e.__traceback__.tb_next,file=sys.stderr)
+def _reset():
+    global _con;_con=code.InteractiveConsole({'__name__':'__main__'})
+_reset()
+def _repl(t,stdin='[]'):
+    _q[:]=json.loads(stdin) if stdin else [];_replay[0]=False
+    _prep(t);m=False
+    for l in t.split('\n'):m=_con.push(l)
+    return m
+def _load(src):
+    _q[:]=[];_replay[0]=False
+    _prep(src);exec(compile(src,'<script>','exec'),_con.locals)
+def _vars():
+    o=[]
+    for k,v in list(_con.locals.items()):
+        if k.startswith('__'):continue
+        try:r=repr(v).replace('\n',' ')[:60]
+        except Exception:r='?'
+        o.append(k+': '+type(v).__name__+' = '+r)
+    return '\n'.join(o)
+# mysql.connector emulation on sqlite3 (browsers cannot open TCP sockets)
+SEED="""CREATE TABLE departments(dept_id INTEGER PRIMARY KEY,name TEXT);
+CREATE TABLE employees(emp_id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,dept_id INT,salary REAL);
+INSERT INTO departments VALUES(1,'Sales'),(2,'Engineering'),(3,'HR');
+INSERT INTO employees(name,dept_id,salary) VALUES('Asha',2,95000),('Ravi',2,88000),('Meena',1,52000),('John',1,48000),('Priya',3,45000),('Omar',2,101000);"""
+_db=None
+class Error(Exception):pass
+class _Cur:
+    def __init__(s,c,d):s.c=c.cursor();s.d=d;s.description=None;s.rowcount=-1;s.lastrowid=None
+    def execute(s,q,p=None):
+        q=q.replace('`','').replace('%s','?').replace('AUTO_INCREMENT','AUTOINCREMENT')
+        if q.strip().upper().startswith('SHOW TABLES'):q="SELECT name FROM sqlite_master WHERE type='table'"
+        try:s.c.execute(q,tuple(p) if p else ())
+        except sqlite3.Error as e:raise Error(str(e))
+        s.description=s.c.description;s.rowcount=s.c.rowcount;s.lastrowid=s.c.lastrowid
+    def _r(s,r):return dict(zip([x[0] for x in s.description],r)) if (r is not None and s.d) else r
+    def fetchall(s):return [s._r(r) for r in s.c.fetchall()]
+    def fetchone(s):return s._r(s.c.fetchone())
+    def fetchmany(s,n=1):return [s._r(r) for r in s.c.fetchmany(n)]
+    def __iter__(s):return iter(s.fetchall())
+    def close(s):pass
+class _Conn:
+    def cursor(s,dictionary=False,**k):return _Cur(_db,dictionary)
+    def commit(s):_db.commit()
+    def rollback(s):_db.rollback()
+    def close(s):pass
+    def is_connected(s):return True
+def connect(**k):
+    global _db
+    if _db is None:_db=sqlite3.connect(':memory:');_db.executescript(SEED)
+    return _Conn()
+_m=types.ModuleType('mysql');_c=types.ModuleType('mysql.connector')
+_c.connect=connect;_c.Error=Error;_m.connector=_c
+sys.modules['mysql']=_m;sys.modules['mysql.connector']=_c
+</script>
+
+<script>
+(()=>{'use strict';
+const $=s=>document.querySelector(s),on=(e,v,f)=>e.addEventListener(v,f);
+const show=id=>document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));
+const dl=(name,data,type)=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:type||'text/plain'}));a.download=name;a.click()};
+/* Editor: line-number gutter, Tab = 4 spaces, auto-indent (Python adds extra indent after ':') */
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const KW={py:new Set('and as assert async await break class continue def del elif else except finally for from global if import in is lambda None nonlocal not or pass raise return True False try while with yield'.split(' ')),
+ sql:new Set('select from where group by order having limit offset insert into values update set delete create table drop alter join left right inner outer on as and or not null is in like between distinct union case when then else end count sum avg min max use show describe desc asc primary key foreign references auto_increment view database databases tables start transaction commit rollback truncate if exists default unique'.split(' '))};
+const BI=new Set('print len range input int str float list dict set tuple open sum min max abs sorted enumerate zip map filter type isinstance round'.split(' '));
+const RE={py:/(#.*)|("""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')|(\b\d+\.?\d*\b|@\w+)|([A-Za-z_]\w*)/,
+ sql:/(--.*|#.*|\/\*[\s\S]*?\*\/)|('(?:''|[^'])*'|"[^"\n]*")|(\b\d+\.?\d*\b)|([A-Za-z_]\w*)/};
+/* Tiny regex tokenizer: groups = comment, string, number, identifier. Output is HTML-escaped before insertion. */
+function hlight(src,m){const re=new RegExp(RE[m].source,'g');let o='',i=0,x;
+ while((x=re.exec(src))){o+=esc(src.slice(i,x.index));i=re.lastIndex;const t=x[0];
+  const c=x[1]?'tc':x[2]?'ts':x[3]?'tn':(KW[m].has(m==='sql'?t.toLowerCase():t)?'tk':(m==='py'&&BI.has(t)?'tf':''));
+  o+=c?'<span class="'+c+'">'+esc(t)+'</span>':esc(t)}
+ return o+esc(src.slice(i))}
+function editor(ta,gut,pyMode){const w=document.createElement('div');w.className='ow';ta.parentNode.insertBefore(w,ta);
+ const hl=document.createElement('pre');hl.className='hl';hl.setAttribute('aria-hidden','true');w.append(hl,ta);
+ const up=()=>{gut.textContent=Array.from({length:ta.value.split('\n').length},(_,i)=>i+1).join('\n');hl.innerHTML=hlight(ta.value,pyMode?'py':'sql')+'\n'};
+ on(ta,'input',up);on(ta,'scroll',()=>{gut.scrollTop=ta.scrollTop;hl.scrollTop=ta.scrollTop;hl.scrollLeft=ta.scrollLeft});
+ on(ta,'keydown',e=>{if(e.key==='Tab'){e.preventDefault();ta.setRangeText('    ',ta.selectionStart,ta.selectionEnd,'end');up()}
+  else if(e.key==='Enter'&&!e.ctrlKey&&!e.metaKey){const s=ta.selectionStart,l=ta.value.slice(0,s).split('\n').pop();let ind=l.match(/^\s*/)[0];if(pyMode&&/:\s*$/.test(l))ind+='    ';e.preventDefault();ta.setRangeText('\n'+ind,s,ta.selectionEnd,'end');up()}});up();return up}
+
+/* ---------- Python IDE ---------- */
+const EX={
+'Hello + input':'name = input("Name? ")\nprint("Hello,", name)\nfor i in range(3):\n    print(i, i * i)\n',
+'Functions & classes':'def fact(n):\n    return 1 if n < 2 else n * fact(n - 1)\n\nclass Dog:\n    def __init__(self, name):\n        self.name = name\n    def speak(self):\n        return self.name + " says woof"\n\nprint(fact(10))\nprint(Dog("Rex").speak())\n',
+'pandas':'import pandas as pd\ndf = pd.DataFrame({"city": ["Lucknow","Delhi","Lucknow","Mumbai"], "sales": [10, 20, 30, 40]})\nprint(df)\nprint(df.groupby("city")["sales"].sum())\nprint(df.describe())\n',
+'matplotlib':'import matplotlib.pyplot as plt\nimport numpy as np\nx = np.linspace(0, 10, 100)\nplt.plot(x, np.sin(x), label="sin")\nplt.plot(x, np.cos(x), label="cos")\nplt.legend(); plt.title("Waves")\nplt.show()\n',
+'numpy + OpenCV':'import numpy as np, cv2\nimg = np.zeros((120, 200, 3), np.uint8)\ncv2.rectangle(img, (20, 20), (120, 90), (0, 200, 255), -1)\ncv2.circle(img, (150, 60), 30, (255, 80, 0), 3)\nblur = cv2.GaussianBlur(img, (15, 15), 0)\nshow_image(blur)\nprint(img.shape)\n',
+'nltk':'from nltk import FreqDist\nfrom nltk.tokenize import wordpunct_tokenize\ntext = "the cat sat on the mat and the dog sat on the log"\nfd = FreqDist(wordpunct_tokenize(text))\nprint(fd.most_common(4))\n',
+'mysql.connector':'import mysql.connector\ncon = mysql.connector.connect(host="localhost", user="demo", database="company")\ncur = con.cursor(dictionary=True)\ncur.execute("SELECT d.name AS dept, AVG(e.salary) AS avg_salary FROM employees e JOIN departments d USING(dept_id) GROUP BY d.name")\nfor row in cur.fetchall():\n    print(row)\ncur.execute("INSERT INTO employees(name,dept_id,salary) VALUES (%s,%s,%s)", ("Zoya", 3, 50000))\ncon.commit()\nprint("new id:", cur.lastrowid)\n'};
+const PYURL='https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js';
+/* Runtime core: runs inside a Web Worker when allowed, otherwise directly on the page. P(type,data) reports back. */
+function runtimeCore(P,load){let py;
+ return async function(m){
+  try{
+   if(m.t==='init'){P('st','Loading Python runtime… first load may take a few seconds');await load();if(typeof globalThis.loadPyodide!=='function')throw new Error('pyodide.js did not define loadPyodide (blocked or failed to load)');py=await globalThis.loadPyodide();
+    P('st','Loading sqlite3 package…');await py.loadPackage('sqlite3');
+    py.setStdout({batched:function(s){P('out',s)}});py.setStderr({batched:function(s){P('err',s)}});
+    await py.runPythonAsync(m.boot);P('ready',py.version);return}
+   if(m.t==='reset'){py.runPython('_reset()');P('done',{more:false,imgs:[],vars:''});return}
+   await py.loadPackagesFromImports(m.code,{messageCallback:function(s){P('st',s)},errorCallback:function(s){P('err',s)}});
+   py.globals.set('_src',m.code);py.globals.set('_stdin',m.stdin||'');py.globals.set('_seed',m.seed||0);
+   const r=await py.runPythonAsync(m.t==='run'?'_run(_src,_stdin,_seed)':m.t==='repl'?'_repl(_src,_stdin)':'_load(_src)');
+   const imgs=py.globals.get('_take')().toJs();let v;try{v=py.globals.get('_vars')()}catch(_){}
+   P('done',{more:typeof r==='boolean'&&r,need:typeof r==='string'?r.slice(6):null,imgs:imgs,vars:v});
+  }catch(x){if(m.t==='init')P('fail',String(x));else{P('err',String(x.message||x));P('done',{more:false,imgs:[],vars:''})}}}}
+const Py={mainMode:false,w:null,ready:false,busy:false,dst:null,more:false,hist:[],hi:0,
+ st(t){$('#pyst').textContent=t},
+ put(d,t,c){const s=document.createElement('span');if(c)s.className=c;s.textContent=t;
+  const m=c==='e'&&t.match(/File "<script>", line (\d+)/);
+  if(m){s.style.cursor='pointer';s.style.textDecoration='underline';s.title='Jump to line '+m[1];s.tabIndex=0;on(s,'click',()=>this.goto(+m[1]))}
+  d.appendChild(s);d.scrollTop=d.scrollHeight},
+ goto(n){mode('S');const ta=$('#src'),L=ta.value.split('\n');let a=0;for(let i=0;i<n-1&&i<L.length;i++)a+=L[i].length+1;ta.focus();ta.setSelectionRange(a,a+(L[n-1]||'').length);ta.scrollTop=Math.max(0,(n-3)*parseFloat(getComputedStyle(ta).lineHeight))},
+ start(){if(this.w)this.w.terminate();this.ready=false;this.busy=false;this.mainMode=false;this.st('Loading Python…');const boot=$('#boot').textContent;
+  try{const src='const core=('+runtimeCore.toString()+')(function(t,d){postMessage({t:t,d:d})},async function(){if(typeof self.loadPyodide!=="function")importScripts("'+PYURL+'")});onmessage=function(e){core(e.data)};';
+   const w=new Worker(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));
+   w.onmessage=e=>this.msg(e.data);w.onerror=()=>{if(!this.ready)this.main(boot)};this.w=w;w.postMessage({t:'init',boot})}
+  catch(e){this.main(boot)}},
+ /* Fallback when the page may not create Workers (sandboxed previews): run Pyodide on the page itself. */
+ main(boot){this.mainMode=true;this.st('Loading Python (main-thread mode)…');const h=runtimeCore((t,d)=>this.msg({t,d}),()=>new Promise((ok,no)=>{if(window.loadPyodide)return ok();const s=document.createElement('script');s.src=PYURL;s.onload=ok;s.onerror=()=>no(new Error('Could not download '+PYURL));document.head.appendChild(s)}));
+  this.w={terminate(){},postMessage:m=>{h(m)}};
+  this.put($('#out'),'Note: Web Workers are blocked here, so Python runs on the page itself. Stop cannot interrupt a running program, so avoid infinite loops, or open the downloaded file locally.\n','d');
+  this.w.postMessage({t:'init',boot})},
+ fail(m){this.st('Failed: '+m+' (check internet, then press Run to retry)');this.w=null},
+ msg({t,d}){const o=this.dst||$('#out');
+  if(t==='st')this.st(d);else if(t==='ready'){this.ready=true;this.st('Python '+d+' · Ready');
+   if(!$('#term').textContent)this.put($('#term'),'Python '+d+' (Pyodide)\nType code below.\n','d')}
+  else if(t==='fail')this.fail(d);else if(t==='out')this.put(o,d+'\n');else if(t==='err')this.put(o,d+'\n','e');
+  else if(t==='done'){this.busy=false;this.st('Ready');d.imgs.forEach(b=>{const i=new Image();i.src='data:image/png;base64,'+b;o.appendChild(i)});
+   if(o===$('#out')){if(d.need!=null)this.askInput(d.need);else this.put(o,'[finished in '+((performance.now()-this.t0)/1000).toFixed(2)+' s]\n','d')}
+   else{this.more=d.more;$('#pr').textContent=d.more?'...':'>>>';$('#vars').textContent=d.vars||'(none)'}o.scrollTop=o.scrollHeight}},
+ send(m){if(!this.w){this.start();this.put(this.dst,'Starting runtime… press again once it says Ready.\n','d');return false}
+  if(!this.ready||this.busy)return false;this.busy=true;this.t0=performance.now();this.st('Running…');this.w.postMessage(m);return true},
+ /* input(): when the script needs a value, the run stops, an inline box asks for it, then the script re-runs with all answers so far (random is seeded so replays match). */
+ run(){this.ans=[];this.seed=(Math.random()*1e9)|0;this.go()},
+ go(){this.dst=$('#out');$('#out').textContent='';const b=$('#stdin').value.replace(/\n$/,''),lines=(b?b.split('\n'):[]).concat(this.ans);
+  this.send({t:'run',code:$('#src').value,stdin:JSON.stringify(lines),seed:this.seed})},
+ askInput(p){const o=$('#out'),row=document.createElement('div'),lab=document.createElement('span'),inp=document.createElement('input');
+  lab.textContent=p;inp.className='mono';inp.setAttribute('aria-label','Program input');inp.style.cssText='background:transparent;color:inherit;border:0;border-bottom:1px solid var(--ac);outline:0;min-width:14ch';
+  row.append(lab,inp);o.appendChild(row);inp.focus();this.st('Waiting for input…');
+  on(inp,'keydown',e=>{if(e.key==='Enter'){e.preventDefault();this.ans.push(inp.value);this.go()}})},
+ stop(){if(!this.busy)return;if(this.mainMode){this.put(this.dst,'Cannot stop on the main thread. Reload the page to interrupt.\n','e');return}
+  this.put(this.dst,'■ Stopped (runtime restarted)\n','e');this.start()},
+ repl(v){this.dst=$('#term');const t=$('#term');const echo=v.split('\n').map((l,i)=>(i||!this.more?'>>> ':'... ')+l).join('\n')+'\n';
+  if(!this.ready||this.busy)return;this.put(t,echo,'d');if(v.trim())this.hist.push(v);this.hi=this.hist.length;
+  const inp=[],n=(v.match(/\binput\s*\(/g)||[]).length;for(let i=0;i<n;i++){const a=prompt('input() value '+(i+1)+' of '+n+' for this entry');if(a===null)break;inp.push(a)}
+  this.send({t:'repl',code:v,stdin:JSON.stringify(inp)})}};
+const upS=editor($('#src'),$('#gut'),true);
+$('#src').value=EX['Hello + input'];upS();
+$('#ex').innerHTML='<option value="">Examples ▾</option>'+Object.keys(EX).map(k=>'<option>'+k+'</option>').join('');
+on($('#ex'),'change',e=>{if(EX[e.target.value]){$('#src').value=EX[e.target.value];upS()}e.target.value=''});
+on($('#run'),'click',()=>Py.run());on($('#stop'),'click',()=>Py.stop());on($('#clr'),'click',()=>{$('#out').textContent=''});
+on($('#open'),'click',()=>$('#file').click());on($('#file'),'change',async e=>{const f=e.target.files[0];if(f){$('#src').value=await f.text();upS()}});
+on($('#save'),'click',()=>dl('script.py',$('#src').value));
+on($('#src'),'keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();Py.run()}});
+const mode=m=>{$('#pS').hidden=m!=='S';$('#pI').hidden=m!=='I';$('#mS').setAttribute('aria-pressed',m==='S');$('#mI').setAttribute('aria-pressed',m==='I');Py.dst=m==='S'?$('#out'):$('#term')};
+on($('#mS'),'click',()=>mode('S'));on($('#mI'),'click',()=>mode('I'));
+on($('#rst'),'click',()=>{if(Py.mainMode)Py.w.postMessage({t:'reset'});else Py.start();Py.more=false;$('#pr').textContent='>>>';$('#term').textContent='';Py.dst=$('#term');Py.put($('#term'),'Session reset.\n','d');$('#vars').textContent='(none)'});
+on($('#tclr'),'click',()=>{$('#term').textContent=''});on($('#tcopy'),'click',()=>navigator.clipboard&&navigator.clipboard.writeText($('#term').textContent));
+on($('#ld'),'change',e=>{if(e.target.checked){Py.dst=$('#term');Py.send({t:'load',code:$('#src').value});Py.put($('#term'),'(script loaded into session)\n','d')}});
+on($('#rin'),'keydown',e=>{const r=$('#rin');
+ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();const v=r.value;r.value='';Py.repl(v)}
+ else if(e.key==='ArrowUp'&&!r.value.includes('\n')){e.preventDefault();if(Py.hi>0)r.value=Py.hist[--Py.hi]}
+ else if(e.key==='ArrowDown'&&!r.value.includes('\n')){e.preventDefault();r.value=Py.hi<Py.hist.length-1?Py.hist[++Py.hi]:(Py.hi=Py.hist.length,'')}
+ else if(e.ctrlKey&&e.key==='l'){e.preventDefault();$('#term').textContent=''}
+ else if(e.ctrlKey&&e.key==='c'){e.preventDefault();if(Py.busy){Py.put($('#term'),'KeyboardInterrupt: runtime restarted, session state lost\n','e');Py.start()}r.value='';Py.more=false;$('#pr').textContent='>>>'}});
+on($('#c1'),'click',()=>{show('py');if(!Py.w)Py.start()});
+
+/* ---------- MySQL workbench (sql.js + compatibility layer) ---------- */
+const SQLJS='https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/';
+const Sq={SQL:null,dbs:{},cur:'school',hist:[],
+ load(u){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=u;s.onload=ok;s.onerror=()=>no(new Error('Could not download '+u));document.head.appendChild(s)})},
+ async init(){if(this.SQL)return;const m=$('#sqlmsg');m.hidden=false;m.textContent='Loading SQL engine…';
+  try{await this.load(SQLJS+'sql-wasm.js');this.SQL=await initSqlJs({locateFile:f=>SQLJS+f});this.seed();m.hidden=true;$('#sqlmain').hidden=false;this.dbSel();this.tree()}
+  catch(e){m.innerHTML='';const p=document.createElement('p');p.className='e';p.textContent='Failed to load: '+e.message;const b=document.createElement('button');b.className='btn';b.textContent='Retry';on(b,'click',()=>this.init());m.append(p,b)}},
+ mk(name){const db=new this.SQL.Database();db.run('PRAGMA foreign_keys=ON');
+  const D=s=>(a)=>new Date(Date.parse(String(a).slice(0,10)));const pad=n=>String(n).padStart(2,'0');
+  const mons=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  db.create_function('NOW',()=>new Date().toISOString().slice(0,19).replace('T',' '));db.create_function('CURDATE',()=>new Date().toISOString().slice(0,10));
+  db.create_function('YEAR',a=>a==null?null:+String(a).slice(0,4));db.create_function('MONTH',a=>a==null?null:+String(a).slice(5,7));db.create_function('DAY',a=>a==null?null:+String(a).slice(8,10));
+  db.create_function('DATEDIFF',(a,b)=>Math.round((Date.parse(String(a).slice(0,10))-Date.parse(String(b).slice(0,10)))/864e5));
+  db.create_function('CONCAT',(a,b)=>a==null||b==null?null:''+a+b);db.create_function('CONCAT',(a,b,c)=>[a,b,c].includes(null)?null:''+a+b+c);db.create_function('CONCAT',(a,b,c,d)=>[a,b,c,d].includes(null)?null:''+a+b+c+d);
+  db.create_function('LEFT',(s,n)=>String(s).slice(0,n));db.create_function('RIGHT',(s,n)=>String(s).slice(-n));db.create_function('LPAD',(s,n,p)=>String(s).padStart(n,p));
+  db.create_function('CEIL',a=>Math.ceil(a));db.create_function('FLOOR',a=>Math.floor(a));db.create_function('RAND',()=>Math.random());
+  db.create_function('DATE_FORMAT',(a,f)=>{const d=new Date(String(a).replace(' ','T'));return f.replace(/%([YmdHisMby])/g,(_,c)=>({Y:d.getFullYear(),y:String(d.getFullYear()).slice(2),m:pad(d.getMonth()+1),d:pad(d.getDate()),H:pad(d.getHours()),i:pad(d.getMinutes()),s:pad(d.getSeconds()),M:mons[d.getMonth()],b:mons[d.getMonth()].slice(0,3)}[c]))});
+  return db},
+ seed(){let s=7;const r=n=>(s=(s*16807)%2147483647)%n,pick=a=>a[r(a.length)],q=v=>v==null?'NULL':typeof v==='number'?v:"'"+String(v).replace(/'/g,"''")+"'",date=(y,n)=>y+'-'+String(1+r(12)).padStart(2,'0')+'-'+String(1+r(28)).padStart(2,'0');
+  const F=['Aarav','Diya','Rohan','Meera','Kabir','Ananya','Ishaan','Sara','Vikram','Neha'],L=['Sharma','Verma','Singh','Gupta','Khan','Patel'],C=['Lucknow','Delhi','Gonda','Kanpur','Mumbai',null];
+  const ins=(db,t,rows)=>rows.forEach(x=>db.run('INSERT INTO '+t+' VALUES('+x.map(q).join(',')+')'));
+  const a=this.dbs.school=this.mk();
+  a.run(`CREATE TABLE teachers(teacher_id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT NOT NULL,subject TEXT,salary DECIMAL(10,2),hire_date DATE);
+CREATE TABLE classes(class_id INTEGER PRIMARY KEY AUTOINCREMENT,class_name TEXT,teacher_id INT REFERENCES teachers(teacher_id),room TEXT);
+CREATE TABLE courses(course_id INTEGER PRIMARY KEY AUTOINCREMENT,title TEXT,credits INT);
+CREATE TABLE students(student_id INTEGER PRIMARY KEY AUTOINCREMENT,first_name TEXT NOT NULL,last_name TEXT,gender CHAR(1),dob DATE,email TEXT UNIQUE,class_id INT REFERENCES classes(class_id),city TEXT,enrolled_on DATE);
+CREATE TABLE enrollments(student_id INT REFERENCES students(student_id),course_id INT REFERENCES courses(course_id),grade CHAR(2),score INT,PRIMARY KEY(student_id,course_id));`);
+  ins(a,'teachers',[[1,'Mrs. Rao','Maths',52000,'2015-06-01'],[2,'Mr. Iyer','Science',48000,'2018-07-15'],[3,'Ms. Dsouza','English',45000,'2020-01-10'],[4,'Mr. Bose','History',null,'2022-08-01']]);
+  ins(a,'classes',[[1,'Class 9A',1,'R101'],[2,'Class 9B',2,'R102'],[3,'Class 10A',3,'R201'],[4,'Class 10B',null,'R202']]);
+  ins(a,'courses',[[1,'Algebra',4],[2,'Physics',4],[3,'Literature',3],[4,'World History',3],[5,'Computer Science',5]]);
+  for(let i=1;i<=30;i++){const f=pick(F),l=pick(L);a.run('INSERT INTO students VALUES(?,?,?,?,?,?,?,?,?)',[i,f,l,i%2?'M':'F',date(2008+r(3)),(f+'.'+l+i+'@school.edu').toLowerCase(),i%11===0?null:1+r(4),pick(C),date(2022+r(3))]);
+   const cs=[1,2,3,4,5].sort(()=>r(3)-1).slice(0,2+r(2));cs.forEach(c=>{const sc=r(10)===0?null:40+r(60);a.run('INSERT INTO enrollments VALUES(?,?,?,?)',[i,c,sc==null?null:sc>=90?'A':sc>=75?'B':sc>=60?'C':'D',sc])})}
+  const b=this.dbs.shop=this.mk();
+  b.run(`CREATE TABLE customers(customer_id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,email TEXT,city TEXT,country TEXT,joined_on DATE);
+CREATE TABLE products(product_id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,category TEXT,price DECIMAL(10,2),stock INT);
+CREATE TABLE orders(order_id INTEGER PRIMARY KEY AUTOINCREMENT,customer_id INT REFERENCES customers(customer_id),order_date DATE,status TEXT);
+CREATE TABLE order_items(order_id INT REFERENCES orders(order_id),product_id INT REFERENCES products(product_id),quantity INT,unit_price DECIMAL(10,2));
+CREATE VIEW order_totals AS SELECT order_id,SUM(quantity*unit_price) AS total FROM order_items GROUP BY order_id;`);
+  for(let i=1;i<=20;i++)b.run('INSERT INTO customers VALUES(?,?,?,?,?,?)',[i,pick(F)+' '+pick(L),'user'+i+'@mail.com',pick(C),pick(['India','India','UK','USA']),date(2023)]);
+  [['Laptop','Electronics',55000],['Phone','Electronics',22000],['Headphones','Electronics',2500],['Desk','Furniture',7000],['Chair','Furniture',4500],['Notebook','Stationery',60],['Pen','Stationery',10],['Backpack','Accessories',1800],['Mouse','Electronics',700],['Lamp','Furniture',1200]].forEach((p,i)=>b.run('INSERT INTO products VALUES(?,?,?,?,?)',[i+1,p[0],p[1],p[2],r(50)]));
+  for(let o=1;o<=30;o++){b.run('INSERT INTO orders VALUES(?,?,?,?)',[o,1+r(16),date(2024),pick(['pending','shipped','delivered','cancelled'])]);
+   for(let k=0;k<1+r(3);k++){const p=1+r(10);b.run('INSERT OR IGNORE INTO order_items VALUES(?,?,?,(SELECT price FROM products WHERE product_id=?))',[o,p,1+r(4),p])}}},
+ get db(){return this.dbs[this.cur]},
+ split(s){const o=[];let c='',q=null,i=0;for(;i<s.length;i++){const ch=s[i],n=s[i+1];
+  if(q){c+=ch;if(ch===q)q=null;continue}
+  if(ch==="'"||ch=='"'||ch==='`'){q=ch;c+=ch;continue}
+  if((ch==='-'&&n==='-')||ch==='#'){while(i<s.length&&s[i]!=='\n')i++;c+='\n';continue}
+  if(ch==='/'&&n==='*'){i=s.indexOf('*/',i+2);if(i<0)break;i++;continue}
+  if(ch===';'){o.push(c);c='';continue}c+=ch}o.push(c);return o.map(x=>x.trim()).filter(Boolean)},
+ sel(sql,p){const r=this.db.exec(sql,p);return r.length?{cols:r[0].columns,rows:r[0].values}:{cols:[],rows:[]}},
+ one(st){const t=st.replace(/;\s*$/,'').trim();let m;
+  if(/^show databases$/i.test(t))return{cols:['Database'],rows:Object.keys(this.dbs).map(x=>[x])};
+  if(m=t.match(/^use\s+`?(\w+)`?$/i)){if(!this.dbs[m[1]])throw new Error("ERR1049 Unknown database '"+m[1]+"'");this.cur=m[1];this.dbSel();this.tree();return{n:0}}
+  if(m=t.match(/^create database(?:\s+if not exists)?\s+`?(\w+)`?$/i)){if(!this.dbs[m[1]]){this.dbs[m[1]]=this.mk();this.dbSel()}return{n:1}}
+  if(m=t.match(/^drop database(?:\s+if exists)?\s+`?(\w+)`?$/i)){delete this.dbs[m[1]];if(this.cur===m[1])this.cur=Object.keys(this.dbs)[0]||'school';this.dbSel();this.tree();return{n:0}}
+  if(/^show tables/i.test(t)){const x=this.sel("SELECT name FROM sqlite_master WHERE type IN('table','view') AND name NOT LIKE 'sqlite_%' ORDER BY name");return{cols:['Tables_in_'+this.cur],rows:x.rows}}
+  if(m=t.match(/^(?:describe|desc|show (?:full )?columns from)\s+`?(\w+)`?/i)){const x=this.sel('PRAGMA table_info('+m[1]+')');if(!x.rows.length)throw new Error('no such table: '+m[1]);return{cols:['Field','Type','Null','Key','Default','Extra'],rows:x.rows.map(c=>[c[1],c[2],c[3]?'NO':'YES',c[5]?'PRI':'',c[4],''])}}
+  if(m=t.match(/^show create table\s+`?(\w+)`?/i)){const x=this.sel("SELECT name,sql FROM sqlite_master WHERE name=?",[m[1]]);if(!x.rows.length)throw new Error('no such table: '+m[1]);return{cols:['Table','Create Table'],rows:x.rows}}
+  if(/^select\s+database\(\)$/i.test(t))return{cols:['DATABASE()'],rows:[[this.cur]]};
+  if(/^select\s+version\(\)$/i.test(t))return{cols:['VERSION()'],rows:[['8.0-browser-emulated']]};
+  if(/^start transaction$/i.test(t)){this.db.run('BEGIN');return{n:0}}
+  if(m=t.match(/^truncate(?:\s+table)?\s+`?(\w+)`?$/i)){this.db.run('DELETE FROM '+m[1]);this.db.run('DELETE FROM sqlite_sequence WHERE name=?',[m[1]]);return{n:0}}
+  if(/^(create|alter|drop)\s+(procedure|function|trigger|event)|fulltext/i.test(t))throw new Error('UNSUPPORTED');
+  const sql=t.replace(/`/g,'').replace(/\bAUTO_INCREMENT\b/gi,'').replace(/\bUNSIGNED\b/gi,'').replace(/\bENGINE\s*=\s*\w+/gi,'').replace(/\bDEFAULT CHARSET\s*=\s*\w+/gi,'').replace(/\bCOMMENT\s+'[^']*'/gi,'')
+   .replace(/(\w+)\s+(?:BIG|SMALL|TINY)?INT(?:\(\d+\))?\s+(?:NOT NULL\s+)?(?:PRIMARY KEY\s*)?$/i,x=>x);
+  const fix=/create table/i.test(sql)&&/AUTO_INCREMENT/i.test(t)?sql.replace(/(\w+)\s+(?:BIG)?INT(?:\(\d+\))?(\s+NOT NULL)?(\s+PRIMARY KEY)?/i,'$1 INTEGER PRIMARY KEY AUTOINCREMENT'):sql;
+  const x=this.sel(fix);return x.cols.length?x:{n:this.db.getRowsModified()}},
+ err(e){const m=String(e.message||e),c=this.cur;let x;
+  if(m==='UNSUPPORTED')return'ERROR 1235 (42000): Not supported in this browser emulation (procedures, triggers, FULLTEXT).';
+  if(x=m.match(/no such table: (\S+)/))return"ERROR 1146 (42S02): Table '"+c+'.'+x[1]+"' doesn't exist";
+  if(x=m.match(/no such column: (\S+)/))return"ERROR 1054 (42S22): Unknown column '"+x[1]+"' in 'field list'";
+  if(/FOREIGN KEY/i.test(m))return'ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails';
+  if(/UNIQUE|PRIMARY KEY/i.test(m))return'ERROR 1062 (23000): Duplicate entry ('+m+')';
+  if(/NOT NULL/i.test(m))return'ERROR 1048 (23000): Column cannot be null ('+m+')';
+  if(/already exists/i.test(m))return'ERROR 1050 (42S01): '+m;
+  if(/syntax error|incomplete input|near/i.test(m))return'ERROR 1064 (42000): You have an error in your SQL syntax; '+m;
+  return'ERROR 1105 (HY000): '+m},
+ table(c,rows){const t=document.createElement('table'),h=t.createTHead().insertRow();c.forEach(x=>{const th=document.createElement('th');th.textContent=x;h.appendChild(th)});
+  const b=t.createTBody();rows.slice(0,500).forEach(r=>{const tr=b.insertRow();r.forEach(v=>{const td=tr.insertCell();if(v===null){td.textContent='NULL';td.className='d'}else{td.textContent=v;if(typeof v==='number')td.style.textAlign='right'}})});
+  const w=document.createElement('div');w.className='tw';w.appendChild(t);return w},
+ pager(c,rows){const w=document.createElement('div'),N=100,nav=document.createElement('div'),lab=document.createElement('span'),holder=document.createElement('div');let pg=0;nav.className='st';
+  const mk=(l,f)=>{const b=document.createElement('button');b.className='btn';b.textContent=l;on(b,'click',f);return b};
+  const draw=()=>{holder.textContent='';holder.appendChild(this.table(c,rows.slice(pg*N,pg*N+N)));lab.textContent=' Rows '+(pg*N+1)+'–'+Math.min(rows.length,pg*N+N)+' of '+rows.length+' '};
+  nav.append(mk('◀ Prev',()=>{if(pg>0){pg--;draw()}}),lab,mk('Next ▶',()=>{if((pg+1)*N<rows.length){pg++;draw()}}));draw();w.append(holder);if(rows.length>N)w.append(nav);return w},
+ exec(txt){const out=$('#res');out.textContent='';let n=0;
+  for(const st of this.split(txt)){n++;const h=document.createElement('div');h.className='st';const t0=performance.now();
+   try{const r=this.one(st),ms=((performance.now()-t0)/1000).toFixed(3);
+    if(r.cols){h.textContent='Result '+n+': '+r.rows.length+' rows in set ('+ms+' sec)';this.last=r;out.append(h,this.pager(r.cols,r.rows))}
+    else{h.textContent='Result '+n+': Query OK, '+r.n+' rows affected ('+ms+' sec)';out.append(h)}
+    this.hist.unshift(st);}
+   catch(e){h.className='st e';h.textContent='Result '+n+': '+this.err(e);out.append(h);break}}
+  this.tree();const qh=$('#qh');qh.innerHTML='<option value="">History</option>';this.hist.slice(0,50).forEach(x=>{const o=document.createElement('option');o.textContent=x.slice(0,70);o.value=x;qh.appendChild(o)})},
+ dbSel(){const s=$('#dbsel');s.innerHTML='';Object.keys(this.dbs).forEach(k=>{const o=document.createElement('option');o.textContent=k;o.selected=k===this.cur;s.appendChild(o)})},
+ tree(){const t=$('#tree');t.textContent='';if(!this.db)return;this.sel("SELECT name,type FROM sqlite_master WHERE type IN('table','view') AND name NOT LIKE 'sqlite_%' ORDER BY name").rows.forEach(([n,ty])=>{
+  const d=document.createElement('details'),s=document.createElement('summary');s.textContent=(ty==='view'?'👁 ':'▦ ')+n;const ul=document.createElement('ul');
+  this.sel('PRAGMA table_info('+n+')').rows.forEach(c=>{const li=document.createElement('li');li.textContent=c[1]+' '+c[2]+(c[5]?' PK':'')+(c[3]?' NN':'');ul.appendChild(li)});
+  on(s,'dblclick',()=>{$('#q').value='SELECT * FROM '+n+' LIMIT 100;';upQ()});s.title='Double-click to query';d.append(s,ul);t.appendChild(d)})}};
+const upQ=editor($('#q'),$('#qgut'),false);
+const SQ={'Select all students':'SELECT * FROM students LIMIT 10;','Students by city':'SELECT city, COUNT(*) AS n FROM students GROUP BY city ORDER BY n DESC;',
+'Join: scores':'SELECT s.first_name, c.title, e.score FROM enrollments e JOIN students s USING(student_id) JOIN courses c USING(course_id) ORDER BY e.score DESC LIMIT 10;',
+'Having avg':'SELECT c.title, ROUND(AVG(e.score),1) AS avg_score, COUNT(*) AS n FROM enrollments e JOIN courses c USING(course_id) GROUP BY c.title HAVING n > 5;',
+'LEFT JOIN null':'SELECT s.first_name FROM students s LEFT JOIN classes c ON s.class_id=c.class_id WHERE c.class_id IS NULL;',
+'Subquery':'SELECT name, salary FROM teachers WHERE salary > (SELECT AVG(salary) FROM teachers);',
+'Shop: view':'USE shop;\nSELECT c.name, t.total FROM order_totals t JOIN orders o USING(order_id) JOIN customers c USING(customer_id) ORDER BY t.total DESC LIMIT 5;',
+'Insert + select':'USE school;\nINSERT INTO courses(title,credits) VALUES(\'Art\',2);\nSELECT * FROM courses;',
+'Update / Delete':'UPDATE teachers SET salary = salary * 1.1 WHERE subject = \'Maths\';\nDELETE FROM enrollments WHERE score IS NULL;',
+'Create table':'CREATE TABLE notes(id INT AUTO_INCREMENT PRIMARY KEY, body VARCHAR(100)) ENGINE=InnoDB;\nINSERT INTO notes(body) VALUES(\'hello\');\nSELECT * FROM notes;',
+'Transaction':'START TRANSACTION;\nDELETE FROM courses WHERE course_id=5;\nROLLBACK;\nSELECT COUNT(*) FROM courses;',
+'Dates':'SELECT first_name, YEAR(dob) AS yr, DATE_FORMAT(enrolled_on,\'%d %b %Y\') AS joined FROM students LIMIT 5;'};
+$('#qs').innerHTML='<option value="">Sample queries ▾</option>'+Object.keys(SQ).map(k=>'<option>'+k+'</option>').join('');
+on($('#qs'),'change',e=>{if(SQ[e.target.value]){$('#q').value=SQ[e.target.value];upQ()}e.target.value=''});
+on($('#qh'),'change',e=>{if(e.target.value){$('#q').value=e.target.value;upQ()}});
+const runQ=()=>{const q=$('#q');const sel=q.value.slice(q.selectionStart,q.selectionEnd).trim();Sq.exec(sel||q.value)};
+on($('#qrun'),'click',runQ);on($('#q'),'keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();runQ()}});
+on($('#qclr'),'click',()=>{$('#q').value='';upQ()});on($('#dbsel'),'change',e=>{Sq.cur=e.target.value;Sq.tree()});
+on($('#qreset'),'click',()=>{Sq.dbs={};Sq.cur='school';Sq.seed();Sq.dbSel();Sq.tree();$('#res').textContent='Sample data reset.'});
+on($('#qdl'),'click',()=>dl(Sq.cur+'.sqlite',Sq.db.export(),'application/octet-stream'));
+$('#q').value='SHOW DATABASES;\nUSE school;\nSHOW TABLES;\nDESCRIBE students;\nSELECT * FROM students LIMIT 5;';upQ();
+const csv=r=>[r.cols,...r.rows].map(x=>x.map(v=>v==null?'':/[",\n]/.test(v)?'"'+String(v).replace(/"/g,'""')+'"':v).join(',')).join('\n');
+on($('#qcsv'),'click',()=>{if(Sq.last)dl('result.csv',csv(Sq.last),'text/csv');else $('#res').textContent='Run a SELECT first, then export.'});
+on($('#qopen'),'click',()=>$('#sfile').click());on($('#sfile'),'change',async e=>{const f=e.target.files[0];if(f){$('#q').value=await f.text();upQ()}});
+on($('#qsave'),'click',()=>dl('query.sql',$('#q').value));
+/* Draggable divider: resizes element a (flex-basis). vert = always vertical; inv = dragging up grows a. Keyboard and double-click supported. */
+function splitter(g,a,vert,inv){const isCol=()=>vert||getComputedStyle(g.parentNode).flexDirection==='column',size=c=>c?a.offsetHeight:a.offsetWidth,set=n=>{a.style.maxHeight='none';a.style.flex='0 0 '+Math.max(50,n)+'px'};
+ on(g,'pointerdown',e=>{e.preventDefault();const c=isCol(),p=ev=>c?ev.clientY:ev.clientX,s0=p(e),z=size(c),k=inv?-1:1;g.classList.add('drag');g.setPointerCapture(e.pointerId);
+  const mv=ev=>set(z+k*(p(ev)-s0));const up=()=>{g.classList.remove('drag');g.removeEventListener('pointermove',mv);g.removeEventListener('pointerup',up)};
+  g.addEventListener('pointermove',mv);g.addEventListener('pointerup',up)});
+ on(g,'dblclick',()=>{a.style.flex='';a.style.maxHeight=''});
+ on(g,'keydown',e=>{const d={ArrowLeft:-24,ArrowUp:-24,ArrowRight:24,ArrowDown:24}[e.key];if(d){e.preventDefault();set(size(isCol())+(inv?-d:d))}})}
+splitter($('#g1'),$('#pS .pane'));splitter($('#g2'),$('#stdin'),true,true);splitter($('#g3'),$('#side'));splitter($('#g4'),$('#sqlmain .ed'),true);
+let fs=13;const setFs=d=>{fs=Math.min(24,Math.max(9,fs+d));document.documentElement.style.setProperty('--fs',fs+'px')};
+on($('#fm'),'click',()=>setFs(-1));on($('#fp'),'click',()=>setFs(1));
+const DEV_NAME='Shiv Pratap Pal';/* <- put the developer name here */
+document.querySelectorAll('.dev').forEach(x=>{x.textContent=DEV_NAME});
+on($('#about'),'click',()=>$('#abt').showModal());on($('#abt-x'),'click',()=>$('#abt').close());
+/* Casual-copy deterrents only: client-side code can never be fully hidden. Editors and output stay selectable so users can copy their own work. */
+on(document,'contextmenu',e=>{if(!(e.target.closest&&e.target.closest('textarea,input,.out,#res,#term')))e.preventDefault()});
+on(document,'dragstart',e=>e.preventDefault());
+on(document,'keydown',e=>{const k=(e.key||'').toLowerCase(),m=e.ctrlKey||e.metaKey;
+ if(e.key==='F12'||(m&&(k==='u'||k==='s'))||(m&&e.shiftKey&&k.length===1&&'ijc'.includes(k))||(e.metaKey&&e.altKey&&k.length===1&&'iuj'.includes(k)))e.preventDefault()});
+on($('#c2'),'click',()=>{show('sql');Sq.init()});
+document.querySelectorAll('.back').forEach(b=>on(b,'click',()=>show('home')));
+})();
+</script>
+</body></html>
